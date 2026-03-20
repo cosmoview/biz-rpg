@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(pip install:*)",
+      "Bash(git -C \"C:/Users/SKTelecom/Desktop/biz_role\" log --oneline -20)"
+    ]
+  }
+}

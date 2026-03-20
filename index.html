@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280">
+  <title>에이닷 비즈 — 신입사원 도토리의 첫 출근</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #game-container canvas { display: block; }
+  </style>
+</head>
+<body>
+  <div id="game-container"></div>
+  <script src="lib/phaser.min.js"></script>
+  <script type="module">
+    import IntroScene  from './src/scenes/IntroScene.js';
+    import BootScene   from './src/scenes/BootScene.js';
+    import GameScene   from './src/scenes/GameScene.js';
+    import UIScene     from './src/scenes/UIScene.js';
+    import EndingScene from './src/scenes/EndingScene.js';
+
+    const config = {
+      type: Phaser.AUTO,
+      width: 1280,
+      height: 720,
+      backgroundColor: '#1a1a2e',
+      parent: 'game-container',
+      pixelArt: true,
+      physics: {
+        default: 'arcade',
+        arcade: { gravity: { y: 0 }, debug: false }
+      },
+      scene: [IntroScene, BootScene, GameScene, UIScene, EndingScene]
+    };
+
+    window.game = new Phaser.Game(config);
+  </script>
+</body>
+</html>
