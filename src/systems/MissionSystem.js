@@ -8,8 +8,8 @@ import { SCRIPTS, MISSION_INITIAL, SKILL_CARDS } from '../data/scripts.js';
 
 /** 스테이지 → 미션ID 매핑 */
 const STAGE_MISSION_MAP = {
-  1: 'vibe_coding',
-  2: 'teams_sync',
+  1: 'chat_builder',
+  2: 'auto_rag',
   3: 'mcp_connect',
 };
 

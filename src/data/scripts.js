@@ -1,5 +1,5 @@
 // ============================================================
-// scripts.js — 전체 대사 및 미션 데이터 v9
+// scripts.js — 전체 대사 및 미션 데이터 v10
 // 모든 대사, 선택지, 정오답, 이미지 슬롯 트리거를 여기서만 관리
 // GameScene/DialogSystem에 대사 직접 하드코딩 금지
 // 구글시트 → CSV → 이 파일로 자동 변환됨
@@ -18,17 +18,17 @@ export const SCRIPTS = {
   ],
 
   // ────────────────────────────────────────────────────────
-  // 스테이지 1: 내 자리 — 바이브코딩
+  // 스테이지 1: 내 자리 — 챗빌더 (Chat Builder)
   // 정선배가 처음부터 내 자리에 대기. 말 걸면 인트로 시작.
   // ────────────────────────────────────────────────────────
   stage1_intro: [
     { speaker: 'jung_sunbae', name: '정선배', text: '어, 도토리 왔구나! 첫 출근 축하해.' },
     { speaker: 'jung_sunbae', name: '정선배', text: '여기가 네 자리야. 우리 팀은 에이닷 비즈 2.0으로 일해.' },
     { speaker: 'jung_sunbae', name: '정선배', text: '에이전트가 뭐냐면... 나 대신 일해주는 AI 비서야.' },
-    { speaker: 'jung_sunbae', name: '정선배', text: '코딩 안 해도 돼. 그냥 말로 하면 돼.' },
-    { speaker: 'jung_sunbae', name: '정선배', text: '예전엔 프롬프트 쓰다가 점심시간 다 갔거든... 지금 생각하면 눈물 나.' },
+    { speaker: 'jung_sunbae', name: '정선배', text: '예전엔 에이전트 하나 만들려면 프롬프트 쓰다 점심시간 다 갔는데...' },
+    { speaker: 'jung_sunbae', name: '정선배', text: '지금은 그냥 대화하듯 말하면 돼. 이게 Chat Builder야.' },
     { speaker: 'system',      name: '',       text: '', showScreen: 'screen_1' },
-    { speaker: 'jung_sunbae', name: '정선배', text: '온보딩 에이전트 한번 만들어볼까?' },
+    { speaker: 'jung_sunbae', name: '정선배', text: '온보딩 에이전트 한번 만들어볼까? 그냥 말로 해봐.' },
   ],
 
   stage1_mission: {
@@ -40,10 +40,11 @@ export const SCRIPTS = {
     ],
     feedback: {
       A: [
-        { speaker: 'jung_sunbae', name: '정선배', text: '딩동댕! 바로 그거야. 이렇게 자연스럽게 말하면 돼.' },
+        { speaker: 'jung_sunbae', name: '정선배', text: '딩동댕! 바로 그거야. Chat Builder는 이렇게 자연스러운 대화만으로 에이전트를 만들 수 있어.' },
         { speaker: 'system',      name: '',       text: '', showScreen: 'screen_2' },
-        { speaker: 'jung_sunbae', name: '정선배', text: '봐봐, 프롬프트 구성, 에이전트 이름, 태그, 소개 문구까지 한 번에 만들어졌지?' },
-        { speaker: 'jung_sunbae', name: '정선배', text: '말만 하면 AI가 알아서 설계해주는 거야. 이게 바이브코딩이야.' },
+        { speaker: 'jung_sunbae', name: '정선배', text: '봐봐, 프롬프트 구성, 이름, 태그, 소개 문구까지 자동 생성됐지?' },
+        { speaker: 'jung_sunbae', name: '정선배', text: '고급 설정이 필요하면 시스템 프롬프트도 직접 수정할 수 있고, 테스트 후 바로 배포까지 돼.' },
+        { speaker: 'jung_sunbae', name: '정선배', text: '말 한마디로 시작해서 배포까지. 이게 Chat Builder의 힘이야.' },
       ],
       B: [
         { speaker: 'jung_sunbae', name: '정선배', text: '구글 검색은 네가 직접 해도 되잖아. 지금은 에이전트를 \'만드는\' 거야! 다시 해볼까?' },
@@ -60,37 +61,39 @@ export const SCRIPTS = {
   ],
 
   // ────────────────────────────────────────────────────────
-  // 스테이지 2: 자료실 — 팀즈 연동
+  // 스테이지 2: 자료실 — Auto-RAG
   // 스테이지 1 클리어 후 자료실 잠금 해제. 박주임 ❗ 등장.
   // ────────────────────────────────────────────────────────
   stage2_intro: [
     { speaker: 'park_juim', name: '박주임', text: '어머, 새로 온 도토리구나? 반가워!' },
-    { speaker: 'park_juim', name: '박주임', text: '에이전트한테 자료를 넣어줘야 똑똑해져. 빈 머리론 아무것도 못 하거든.' },
-    { speaker: 'park_juim', name: '박주임', text: '파일 하나하나 올릴 필요 없어. 팀즈 폴더 연결하면 끝이야.' },
-    { speaker: 'park_juim', name: '박주임', text: '내가 처음 알았을 때 허무했어 진짜.' },
+    { speaker: 'park_juim', name: '박주임', text: '에이전트가 똑똑하려면 자료가 있어야 해. 빈 머리론 아무것도 못 하거든.' },
+    { speaker: 'park_juim', name: '박주임', text: '근데 파일 하나하나 올리고 있으면 그게 일이잖아?' },
+    { speaker: 'park_juim', name: '박주임', text: '그래서 Auto-RAG가 있는 거야.' },
+    { speaker: 'park_juim', name: '박주임', text: 'Teams나 SharePoint 문서를 자동으로 연결해서, 에이전트가 알아서 참조해.' },
     { speaker: 'system',    name: '',       text: '', showScreen: 'screen_3' },
-    { speaker: 'park_juim', name: '박주임', text: '어떤 폴더를 연결해야 할까?' },
+    { speaker: 'park_juim', name: '박주임', text: '자, 어떤 자료를 연결해볼까?' },
   ],
 
   stage2_mission: {
     type: 'choice',
     choices: [
-      { label: 'A', text: '📁 내 개인 메모',          correct: false },
+      { label: 'A', text: '📁 내 일기장',             correct: false },
       { label: 'B', text: '📁 팀 공유 - 온보딩 자료', correct: true  },
       { label: 'C', text: '📁 점심 맛집 리스트',       correct: false },
     ],
     feedback: {
       A: [
-        { speaker: 'park_juim', name: '박주임', text: '그건 네 일기장이야 도토리... 개인 메모 말고 팀 전체가 쓰는 공유 폴더를 골라봐.' },
+        { speaker: 'park_juim', name: '박주임', text: '그건 네 일기장이야 도토리... 팀 전체가 쓰는 공유 자료를 골라봐.' },
       ],
       B: [
-        { speaker: 'park_juim', name: '박주임', text: '정답! 팀 공유 폴더를 연결하면 거기 있는 자료를 에이전트가 바로 참고할 수 있어.' },
+        { speaker: 'park_juim', name: '박주임', text: '정답! Teams 공유 폴더를 연결하면 에이전트가 바로 참고할 수 있어.' },
         { speaker: 'system',    name: '',       text: '', showScreen: 'screen_4' },
-        { speaker: 'park_juim', name: '박주임', text: '팀즈에 자료 업데이트하면 에이전트도 자동으로 최신 상태가 돼.' },
-        { speaker: 'park_juim', name: '박주임', text: '일을 두 번 안 해도 되는 거지. 편한 세상이야 정말.' },
+        { speaker: 'park_juim', name: '박주임', text: 'Auto-RAG는 파일만 되는 게 아니야. Teams, SharePoint 문서까지 직접 활용할 수 있어.' },
+        { speaker: 'park_juim', name: '박주임', text: '자료가 업데이트되면 에이전트도 자동으로 최신 상태가 되고.' },
+        { speaker: 'park_juim', name: '박주임', text: '일일이 업로드 안 해도 되는 세상이 온 거야. 편하지?' },
       ],
       C: [
-        { speaker: 'park_juim', name: '박주임', text: '맛집 에이전트는 나중에 만들자! 지금은 업무용 폴더를 골라봐.' },
+        { speaker: 'park_juim', name: '박주임', text: '맛집 에이전트는 나중에 만들자! 지금은 업무용 자료를 골라봐.' },
       ],
     },
   },
@@ -100,37 +103,41 @@ export const SCRIPTS = {
   ],
 
   // ────────────────────────────────────────────────────────
-  // 스테이지 3: 회의실 — MCP 연결
+  // 스테이지 3: 회의실 — MCP 기반 기능 확장
   // 스테이지 2 클리어 후 회의실 잠금 해제. 최과장 ❗ 등장.
   // ────────────────────────────────────────────────────────
   stage3_intro: [
     { speaker: 'choi_gwajang', name: '최과장', text: '오, 도토리? 들어와.' },
     { speaker: 'choi_gwajang', name: '최과장', text: '에이전트 만들고 자료도 연결했다며? 근데 아직 반쪽짜리야.' },
-    { speaker: 'choi_gwajang', name: '최과장', text: 'MCP가 뭐냐고? USB 같은 건데, AI용이야. 꽂으면 바로 쓰는 거.' },
-    { speaker: 'choi_gwajang', name: '최과장', text: '한 번 만들어두면 여러 에이전트에서 재사용도 되고.' },
+    { speaker: 'choi_gwajang', name: '최과장', text: '진짜 일을 하려면 외부 도구가 필요해. 여기서 MCP가 등장하는 거야.' },
+    { speaker: 'choi_gwajang', name: '최과장', text: 'MCP는 Model Context Protocol. 쉽게 말하면 AI용 USB야. 꽂으면 바로 쓰는 거.' },
+    { speaker: 'choi_gwajang', name: '최과장', text: '기업에서 MCP를 한 번 등록하면, 그 회사 누구든 에이전트 만들 때 가져다 쓸 수 있어.' },
     { speaker: 'system',       name: '',       text: '', showScreen: 'screen_5' },
-    { speaker: 'choi_gwajang', name: '최과장', text: '업무 요청마다 어떤 도구를 연결해야 할까?' },
+    { speaker: 'choi_gwajang', name: '최과장', text: '자, 업무 요청마다 어떤 도구를 연결해야 할까?' },
   ],
 
   stage3_mission: {
     type: 'matching',
     tasks: [
-      { id: 'mail',  label: '어제 온 메일 중 중요한 거 요약해줘', answer: 'outlook'  },
-      { id: 'pdf',   label: '이 견적서 PDF에서 금액 뽑아줘',       answer: 'azure_di' },
-      { id: 'chart', label: '뽑은 데이터를 차트로 보여줘',         answer: 'plotly'   },
+      { id: 'calendar', label: '내일 오전 회의 일정 잡아줘',           answer: 'outlook'  },
+      { id: 'pdf',      label: '이 견적서 PDF에서 금액 뽑아줘',       answer: 'azure_di' },
+      { id: 'chart',    label: '뽑은 데이터를 차트로 보여줘',         answer: 'plotly'   },
+      { id: 'ocr',      label: '이 주민등록등본에서 주소 읽어줘',     answer: 'gov_ocr'  },
     ],
     tools: [
-      { id: 'outlook',  label: '📧 아웃룩 메일' },
-      { id: 'azure_di', label: '📄 문서 추출 (Azure DI)' },
-      { id: 'plotly',   label: '📊 시각화 (Plotly)' },
+      { id: 'outlook',  label: '📅 Outlook 일정 연동' },
+      { id: 'azure_di', label: '📄 Azure DI (문서 추출)' },
+      { id: 'plotly',   label: '📊 시각화 도구' },
+      { id: 'gov_ocr',  label: '🏛️ 관공서 OCR' },
     ],
     wrongFeedback: [
-      { speaker: 'choi_gwajang', name: '최과장', text: '음, 그건 좀 다른데? 다시 생각해봐. 메일 관련이면 메일 도구, 문서 분석이면 추출 도구, 그래프면 시각화 도구야.' },
+      { speaker: 'choi_gwajang', name: '최과장', text: '음, 그건 좀 다른데? 다시 생각해봐. 일정이면 Outlook, 문서 분석이면 Azure DI, 그래프면 시각화 도구, 관공서 서류면 OCR이야.' },
     ],
     correctFeedback: [
       { speaker: 'choi_gwajang', name: '최과장', text: '완벽해! 센스 있는데?' },
       { speaker: 'system',       name: '',       text: '', showScreen: 'screen_6' },
-      { speaker: 'choi_gwajang', name: '최과장', text: 'MCP 연결하면 에이전트가 직접 메일 읽고, 문서 분석하고, 차트까지 만들어.' },
+      { speaker: 'choi_gwajang', name: '최과장', text: 'MCP 연결하면 에이전트가 직접 일정 잡고, 문서 분석하고, 차트까지 만들어.' },
+      { speaker: 'choi_gwajang', name: '최과장', text: '관공서 서류도 OCR로 읽어내니까, 수작업으로 타이핑하던 시대는 끝난 거야.' },
       { speaker: 'choi_gwajang', name: '최과장', text: '답변만 하는 챗봇이 아니라 진짜 업무 파트너가 되는 거지.' },
     ],
   },
@@ -138,31 +145,23 @@ export const SCRIPTS = {
   stage3_clear: [
     { speaker: 'choi_gwajang', name: '최과장', text: '자, 이제 네 자리로 돌아가서 일을 시작해봐!' },
   ],
-  // 스테이지 3 클리어 후:
-  // - 정선배 ✅ → ❗ 재등장 (내 자리)
-  // - 김대리 없음 → ❗ 등장 (휴게실)
 
   // ────────────────────────────────────────────────────────
   // 엔딩: 내 자리
-  // 플레이어가 직접 걸어서 내 자리 복귀 후 정선배 ❗ 에게 말 걸기
   // ────────────────────────────────────────────────────────
   ending_intro: [
     { speaker: 'jung_sunbae', name: '정선배', text: '도토리, 벌써 다 돌아봤어? 역시 신입 중 최고다.' },
     { speaker: 'jung_sunbae', name: '정선배', text: '오늘 배운 거 정리해볼까?' },
   ],
-  // 위 대사 완료 → 스킬카드 3장 연출 (EndingScene 처리)
-  // 스킬카드 합체 → 마스터 뱃지 변환 → 아래 후속 대사
 
   ending_after_cards: [
     { speaker: 'jung_sunbae', name: '정선배', text: 'AI가 질문에 답해주는 도구가 아니라, 업무를 함께 수행하는 파트너가 된 거지.' },
     { speaker: 'jung_sunbae', name: '정선배', text: '이제 도토리도 에이닷 비즈 마스터야.' },
     { speaker: 'jung_sunbae', name: '정선배', text: '점심 뭐 먹을지 에이전트한테... 아 그건 아직 안 된다고 했지.' },
   ],
-  // 대사 완료 → 🎉 첫 출근 완료! + 플레이타임 + [다시 하기] 버튼
 
   // ────────────────────────────────────────────────────────
   // 히든 FAQ: 휴게실 — 김대리
-  // 스테이지 3 클리어 후 ❗ 등장. 선택사항. 반복 선택 가능.
   // ────────────────────────────────────────────────────────
   kimdarei_intro: [
     { speaker: 'kim_daeri', name: '김대리', text: '아, 도토리? 나 김대리. 여기서 이것저것 물어보는 사람들이 많아서, 에이닷 비즈 FAQ 담당이 됐어. 비공식적으로.' },
@@ -178,11 +177,11 @@ export const SCRIPTS = {
       },
       {
         label: '개발자 모드는 쓸 수 있나요?',
-        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '응, 고급 사용자용으로 개발자 모드도 그대로 있어. 프롬프트 직접 수정하고 싶은 사람은 그쪽으로 가면 돼.' }],
+        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '응, 시스템 프롬프트 기반 고급 설정도 그대로 지원해. 고급 사용자도 걱정 없어.' }],
       },
       {
         label: 'MCP 추가 요청은 어떻게 하나요?',
-        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '필요한 MCP가 있으면 요청할 수 있어. 요청하면 검토 후에 추가해준대. 적극적으로 활용해봐!' }],
+        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '기업 단위로 MCP를 등록하면 그 회사 누구나 쓸 수 있어. 필요하면 요청해봐!' }],
       },
       {
         label: '만들다 오류가 나면요?',
@@ -202,13 +201,12 @@ export const SCRIPTS = {
   easter_eggs: {
     easter_box: [
       { speaker: 'system', name: '[시스템]', italic: true, text: '먼지 쌓인 상자에 \'USB 3,000개 (2019년 교육자료)\' 라벨이 붙어있다.' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: '팀즈 연동이 있었으면...' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: 'Auto-RAG가 있었으면...' },
     ],
     easter_whiteboard: [
-      { speaker: 'system', name: '[시스템]', italic: true, text: '화이트보드에 누군가 그린 그림이 있다.' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: '[에이전트 1.0] → 질문 → 대답 → 끝' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: '[에이전트 2.0] → 질문 → 메일 확인 → 문서 분석 → 차트 생성 → 보고서 작성 → 커피 타기(예정)' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: '밑에 작은 글씨: \'커피는 아직 안 됩니다 - IT팀\'' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '화이트보드에 누군가 적어놓은 메모가 있다.' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '\'사내에서도 클로드 스킬같이 되면 좋을 텐데...\'' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '그 밑에 다른 필체로: \'에이닷 비즈 cowork..???\'' },
     ],
     easter_coffee: [
       { speaker: 'system', name: '[시스템]', italic: true, text: '커피머신에 포스트잇이 붙어있다.' },
@@ -221,9 +219,12 @@ export const SCRIPTS = {
       { speaker: 'system', name: '[시스템]', italic: true, text: '밑에 \'진심임\' 이라고 추가되어있다.' },
     ],
     easter_table: [
-      { speaker: 'system', name: '[시스템]', italic: true, text: '탁자 위에 신문이 놓여있다.' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: '「에이닷 비즈 회의록이 업그레이드 된다!」' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: '에이닷 노트의 특장점을 모두 흡수~ 5월 예정' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '탁자 위에 사내 뉴스레터가 놓여있다.' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '「에이닷 비즈 더 강력해진다!」' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '4월 말 — MCP 확대 지원 (팀즈, 아웃룩 메일)' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '5월 말 — 회의록 기능 대폭 강화 (에이닷 노트 기능 통합)' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '6월 말 — 에이닷 비즈 cowork 도입 (클로드와 유사한 스킬 생성)' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '많은 관심 바랍니다!' },
     ],
   },
 
@@ -231,8 +232,8 @@ export const SCRIPTS = {
   // 잠긴 구역 안내 메시지
   // ────────────────────────────────────────────────────────
   locked_messages: {
-    barrier_jaryosil: '아직 갈 수 없는 것 같다. 먼저 바이브코딩을 완료하자.',
-    barrier_hoeuisil: '아직 갈 수 없는 것 같다. 먼저 팀즈 연동을 완료하자.',
+    barrier_jaryosil: '아직 갈 수 없는 것 같다. 먼저 챗빌더를 완료하자.',
+    barrier_hoeuisil: '아직 갈 수 없는 것 같다. 먼저 Auto-RAG를 완료하자.',
   },
 
   // ────────────────────────────────────────────────────────
@@ -249,25 +250,25 @@ export const SCRIPTS = {
 // ────────────────────────────────────────────────────────
 export const SKILL_CARDS = [
   {
-    id:    'vibe_coding',
+    id:    'chat_builder',
     icon:  '🗣️',
-    title: '바이브코딩',
-    desc1: '자연어로 말하면 AI 에이전트가 자동 생성!',
-    desc2: '프롬프트, 이름, 태그, 소개문구까지 한 번에.',
+    title: '챗빌더',
+    desc1: '대화만으로 에이전트를 만든다!',
+    desc2: '프롬프트, 이름, 이미지까지 자동 생성. 테스트 후 바로 배포.',
   },
   {
-    id:    'teams_sync',
+    id:    'auto_rag',
     icon:  '📂',
-    title: '팀즈 연동',
-    desc1: '팀즈 공유 폴더를 지식베이스로 바로 연결!',
-    desc2: '자료가 업데이트되면 에이전트도 자동 반영.',
+    title: 'Auto-RAG',
+    desc1: '사내 문서를 자동으로 연결·검색·활용!',
+    desc2: 'Teams, SharePoint 문서까지 자동 반영.',
   },
   {
     id:    'mcp_connect',
     icon:  '🔌',
     title: 'MCP 연결',
-    desc1: '메일, 문서, 시각화 등 외부 도구를 에이전트에 연결!',
-    desc2: 'AI가 대답만 하는 게 아니라, 직접 실행까지.',
+    desc1: '외부 도구를 꽂아서 진짜 일을 한다!',
+    desc2: 'Outlook 일정, Azure DI, 시각화, 관공서 OCR까지.',
   },
 ];
 
@@ -275,9 +276,9 @@ export const SKILL_CARDS = [
 // 미션 상태 초기값
 // ────────────────────────────────────────────────────────
 export const MISSION_INITIAL = {
-  vibe_coding: false,
-  teams_sync:  false,
-  mcp_connect: false,
+  chat_builder: false,
+  auto_rag:     false,
+  mcp_connect:  false,
 };
 
 // ────────────────────────────────────────────────────────

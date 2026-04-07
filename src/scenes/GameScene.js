@@ -337,52 +337,40 @@ export default class GameScene extends Phaser.Scene {
   // 이스터에그 오브젝트
   // ─────────────────────────────────────────────────────────
 
-  /** 이스터에그 ✦ 마커 배치 (glow + 바운스 + 색상 펄스) */
+  /** 이스터에그 ✦ 마커 배치 */
   _createEasterEggs() {
+    /** 이스터에그 위치 데이터 */
     const EGGS = [
       { key: 'easter_box',        x: 150,  y: 620 },
       { key: 'easter_whiteboard', x: 730,  y: 455 },
       { key: 'easter_coffee',     x: 900,  y: 130 },
       { key: 'easter_fridge',     x: 1065, y: 120 },
-      { key: 'easter_table',      x: 1110, y: 430 },
+      { key: 'easter_table',      x: 1150, y: 430 },
     ];
 
     EGGS.forEach(({ key, x, y }) => {
-      const markerY = y - 20;
-
       // ✦ 마커 텍스트
-      const marker = this.add.text(x, markerY, '✦', {
+      const marker = this.add.text(x, y - 16, '✦', {
         fontSize: '18px',
         fontFamily: 'sans-serif',
         color: '#FFD700',
-      }).setOrigin(0.5).setDepth(180).setAlpha(0.8);
+      }).setOrigin(0.5).setDepth(180).setAlpha(0.5);
 
-      // 위아래 바운스 (NPC ❗ 마커처럼)
-      this.tweens.add({
+      // 기본 반짝임 트윈 (느린 펄스)
+      const baseTween = this.tweens.add({
         targets: marker,
-        y: markerY - 6,
-        duration: 600,
+        alpha: { from: 0.3, to: 0.7 },
+        duration: 1200,
         yoyo: true,
         repeat: -1,
         ease: 'Sine.easeInOut',
       });
 
-      // 흰색/골드 교차 색상 펄스
-      this.time.addEvent({
-        delay: 800,
-        loop: true,
-        callback: () => {
-          if (!marker.active) return;
-          const isGold = marker.style.color === '#FFD700';
-          marker.setColor(isGold ? '#ffffff' : '#FFD700');
-        },
-      });
-
-      this.easterEggs[key] = { marker, x, y, _glowing: false };
+      this.easterEggs[key] = { marker, x, y, baseTween };
     });
   }
 
-  /** 매 프레임: 이스터에그 근접 시 크게 + 밝게 변함 */
+  /** 매 프레임: 이스터에그 근접 시 밝게 반짝임 */
   _updateEasterEggGlow() {
     const px = this.player.x;
     const py = this.player.y;
@@ -391,17 +379,31 @@ export default class GameScene extends Phaser.Scene {
       const dist = Phaser.Math.Distance.Between(px, py, egg.x, egg.y);
       const near = dist < 50;
 
+      // 근접 시 더 밝게 + 빠르게
       if (near && !egg._glowing) {
         egg._glowing = true;
-        this.tweens.add({
-          targets: egg.marker, scale: 1.4, alpha: 1,
-          duration: 200, ease: 'Back.easeOut',
+        egg.baseTween.stop();
+        egg.marker.setAlpha(1);
+        egg._nearTween = this.tweens.add({
+          targets: egg.marker,
+          alpha: { from: 0.7, to: 1 },
+          scale: { from: 1, to: 1.3 },
+          duration: 400,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
         });
       } else if (!near && egg._glowing) {
         egg._glowing = false;
-        this.tweens.add({
-          targets: egg.marker, scale: 1, alpha: 0.8,
-          duration: 300,
+        if (egg._nearTween) { egg._nearTween.stop(); egg._nearTween = null; }
+        egg.marker.setScale(1);
+        egg.baseTween = this.tweens.add({
+          targets: egg.marker,
+          alpha: { from: 0.3, to: 0.7 },
+          duration: 1200,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut',
         });
       }
     }
@@ -452,7 +454,7 @@ export default class GameScene extends Phaser.Scene {
     this.talkingNpc = npcKey;
 
     if (npcKey === 'jung_sunbae') {
-      if (!mission.isCompleted('vibe_coding')) mission.startStage(1);
+      if (!mission.isCompleted('chat_builder')) mission.startStage(1);
       else if (mission.allCompleted) {
         this.dialog.startDialog(SCRIPTS.ending_intro, () => {
           this.talkingNpc = null;
@@ -466,7 +468,7 @@ export default class GameScene extends Phaser.Scene {
       return;
     }
     if (npcKey === 'park_juim') {
-      if (!mission.isCompleted('teams_sync')) mission.startStage(2);
+      if (!mission.isCompleted('auto_rag')) mission.startStage(2);
       return;
     }
     if (npcKey === 'choi_gwajang') {

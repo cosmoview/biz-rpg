@@ -24,9 +24,9 @@ const HUD_CONFIG = {
 
 /** 미션 ID → 한글 이름 매핑 */
 const MISSION_NAMES = {
-  vibe_coding: '바이브코딩',
-  teams_sync:  '팀즈 연동',
-  mcp_connect: 'MCP 연결',
+  chat_builder: '챗빌더',
+  auto_rag:     'Auto-RAG',
+  mcp_connect:  'MCP 연결',
 };
 
 export default class UIScene extends Phaser.Scene {
