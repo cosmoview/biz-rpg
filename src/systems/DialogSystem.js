@@ -436,10 +436,9 @@ export default class DialogSystem {
 
     const c = DIALOG_CONFIG;
 
-    // showScreen 이벤트 처리 (빈 텍스트 + 이미지 트리거)
+    // showScreen 이벤트 처리 (전체화면 이미지 표시)
     if (line.showScreen) {
-      // TODO: 이미지 슬롯 표시 시스템 연결
-      this._advanceToNext();
+      this._showScreenImage(line.showScreen);
       return;
     }
 
@@ -578,6 +577,9 @@ export default class DialogSystem {
   _onAdvance() {
     if (!this.isActive) return;
 
+    // 스크린 이미지 표시 중이면 무시 (이미지 자체 입력으로 닫힘)
+    if (this._screenShowing) return;
+
     // 선택지 표시 중이면 무시 (키보드/클릭으로만 선택)
     if (this._choiceRects.length > 0) return;
 
@@ -655,5 +657,122 @@ export default class DialogSystem {
     // 이름/본문 텍스트 위치도 기본으로
     this.nameText.setY(c.BOX_Y + c.PAD_Y);
     this.bodyText.setY(c.BOX_Y + c.PAD_Y + 30);
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // 스크린 이미지 표시 (showScreen 이벤트)
+  // ─────────────────────────────────────────────────────────
+
+  /**
+   * 전체화면 이미지 오버레이 표시
+   * 이미지가 로드되지 않은 screen 키는 건너뛰기
+   * @param {string} screenKey — 'screen_1' ~ 'screen_6'
+   */
+  _showScreenImage(screenKey) {
+    const scene = this.scene;
+
+    // 해당 이미지가 로드되어 있는지 확인
+    const tex = scene.textures.get(screenKey);
+    if (!tex || tex.key === '__MISSING') {
+      // 이미지 없으면 건너뛰기 (screen_1, 3, 5 등)
+      this._advanceToNext();
+      return;
+    }
+
+    // 이미지 표시 중 플래그 (스페이스 이중 입력 방지)
+    this._screenShowing = true;
+
+    // 대화창 임시 숨기기
+    this.container.setVisible(false);
+
+    const CX = 640;
+    const CY = 360;
+    const W = 1280;
+    const H = 720;
+    const DEPTH = 2000;
+
+    // ── dimming 배경 ──
+    const dim = scene.add.rectangle(CX, CY, W, H, 0x000000, 0)
+      .setDepth(DEPTH).setInteractive();
+    scene.tweens.add({ targets: dim, fillAlpha: 0.75, duration: 300 });
+
+    // ── 이미지 표시 (화면 중앙, 여백 포함 축소) ──
+    // pixelArt 모드에서도 스크린 이미지는 부드럽게 표시
+    const texSource = scene.textures.get(screenKey).getSourceImage();
+    if (texSource) {
+      scene.textures.get(screenKey).setFilter(Phaser.Textures.FilterMode.LINEAR);
+    }
+
+    const img = scene.add.image(CX, CY - 10, screenKey)
+      .setDepth(DEPTH + 1).setAlpha(0);
+
+    // 이미지를 화면에 맞게 스케일 (상하좌우 여백)
+    const maxW = W - 80;
+    const maxH = H - 100;
+    const scaleX = maxW / img.width;
+    const scaleY = maxH / img.height;
+    const scale = Math.min(scaleX, scaleY, 1); // 원본보다 커지지 않게
+    img.setScale(scale);
+
+    // 페이드인
+    scene.tweens.add({
+      targets: img,
+      alpha: 1,
+      duration: 400,
+      ease: 'Power2',
+    });
+
+    // ── 안내 텍스트 ──
+    const hint = scene.add.text(CX, H - 30, '클릭 또는 SPACE로 계속 ▶', {
+      fontSize: '14px',
+      fontFamily: 'sans-serif',
+      color: '#888888',
+    }).setOrigin(0.5).setDepth(DEPTH + 2).setAlpha(0);
+
+    scene.tweens.add({
+      targets: hint,
+      alpha: 1,
+      duration: 400,
+      delay: 500,
+    });
+
+    // ── 닫기 처리 ──
+    let closed = false;
+    const closeScreen = () => {
+      if (closed) return;
+      closed = true;
+
+      // 이벤트 해제
+      dim.off('pointerdown', onPointer);
+      if (this._screenSpaceKey) {
+        this._screenSpaceKey.off('down', onSpace);
+      }
+
+      // 페이드아웃 후 제거
+      scene.tweens.add({
+        targets: [dim, img, hint],
+        alpha: 0,
+        duration: 250,
+        onComplete: () => {
+          dim.destroy();
+          img.destroy();
+          hint.destroy();
+
+          // 대화창 복원 후 다음 대사로
+          this._screenShowing = false;
+          this.container.setVisible(true);
+          this._advanceToNext();
+        },
+      });
+    };
+
+    const onPointer = () => closeScreen();
+    const onSpace = () => closeScreen();
+
+    dim.on('pointerdown', onPointer);
+    this._screenSpaceKey = scene.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE
+    );
+    this._screenSpaceKey.on('down', onSpace);
   }
 }

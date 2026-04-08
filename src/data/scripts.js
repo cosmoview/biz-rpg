@@ -157,7 +157,7 @@ export const SCRIPTS = {
   ending_after_cards: [
     { speaker: 'jung_sunbae', name: '정선배', text: 'AI가 질문에 답해주는 도구가 아니라, 업무를 함께 수행하는 파트너가 된 거지.' },
     { speaker: 'jung_sunbae', name: '정선배', text: '이제 도토리도 에이닷 비즈 마스터야.' },
-    { speaker: 'jung_sunbae', name: '정선배', text: '점심 뭐 먹을지 에이전트한테... 아 그건 아직 안 된다고 했지.' },
+    { speaker: 'jung_sunbae', name: '정선배', text: '자 이제 에이전트한테 밥도 먹여달라고... 아 그건 아직 안 된다고 했지.' },
   ],
 
   // ────────────────────────────────────────────────────────

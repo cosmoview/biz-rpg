@@ -50,6 +50,11 @@ export default class BootScene extends Phaser.Scene {
         frameHeight: FRAME_SIZE,
       });
     }
+
+    // ── 스크린 이미지 로드 (미션 클리어 시 표시) ──
+    this.load.image('screen_2', 'assets/screens/screen_2.jpg' + v);
+    this.load.image('screen_4', 'assets/screens/screen_4.jpg' + v);
+    this.load.image('screen_6', 'assets/screens/screen_6.jpg' + v);
   }
 
   create() {
