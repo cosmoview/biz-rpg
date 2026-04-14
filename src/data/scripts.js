@@ -164,7 +164,7 @@ export const SCRIPTS = {
   // 히든 FAQ: 휴게실 — 김대리
   // ────────────────────────────────────────────────────────
   kimdarei_intro: [
-    { speaker: 'kim_daeri', name: '김대리', text: '아, 도토리? 나 김대리. 여기서 이것저것 물어보는 사람들이 많아서, 에이닷 비즈 FAQ 담당이 됐어. 비공식적으로.' },
+    { speaker: 'kim_daeri', name: '김대리', text: '아, 도토리? 나 김대리. 커피 마시러 왔다가 에이닷 비즈 5월 업데이트 소식 들었는데... 꽤 크더라고.' },
     { speaker: 'kim_daeri', name: '김대리', text: '뭐 궁금한 거 있어?' },
   ],
 
@@ -172,25 +172,25 @@ export const SCRIPTS = {
     type: 'faq',
     questions: [
       {
-        label: '기존 에이전트는 유지되나요?',
-        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '걱정 마, 기존에 만든 에이전트 다 유지돼. 2.0으로 업데이트돼도 리셋 같은 거 없어!' }],
+        label: '5월에 회의록도 바뀐다고요?',
+        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '회의록이 완전히 달라진대! 에이닷 노트처럼 모바일도 지원하고 강력해진다고 하던데!' }],
       },
       {
-        label: '개발자 모드는 쓸 수 있나요?',
-        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '응, 시스템 프롬프트 기반 고급 설정도 그대로 지원해. 고급 사용자도 걱정 없어.' }],
+        label: '에이닷 비즈 뉴스랑 보고서는요?',
+        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '5월에 뉴스랑 보고서도 업그레이드 된다고 하더라. 외부 데이터 활용을 더 잘할 수 있을 거 같아!' }],
       },
       {
-        label: 'MCP 추가 요청은 어떻게 하나요?',
-        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '기업 단위로 MCP를 등록하면 그 회사 누구나 쓸 수 있어. 필요하면 요청해봐!' }],
+        label: '6월엔요?',
+        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '오 이건 나도 최근에 들었는데! 스킬 기반 AI 툴이 나온다던데? 에이전트가 더 다양한 걸 할 수 있게 된다는 것 같더라고!!' }],
       },
       {
-        label: '만들다 오류가 나면요?',
-        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '당황하지 말고 다시 시도해봐. 그래도 안 되면 관리자한테 문의하면 돼. 다들 처음엔 그래.' }],
+        label: '기대되는 거 있어요?',
+        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '솔직히? 커피 타주는 MCP... 아 그건 아직 미지원이라고 했지.' }],
       },
       {
-        label: '그만 물어볼게',
+        label: '그만 물어볼게요',
         isExit: true,
-        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '또 궁금한 거 있으면 언제든 와. 나 여기 항상 있어. ...커피가 맛있어서 그런 거야.' }],
+        answer: [{ speaker: 'kim_daeri', name: '김대리', text: '또 궁금한 거 생기면 와. 나 어차피 여기 맨날 있어. ...커피가 진짜 맛있어서 그런 거야. 진짜로.' }],
       },
     ],
   },
