@@ -24,9 +24,9 @@ const HUD_CONFIG = {
 
 /** 미션 ID → 한글 이름 매핑 */
 const MISSION_NAMES = {
-  chat_builder: '챗빌더',
-  auto_rag:     'Auto-RAG',
-  mcp_connect:  'MCP 연결',
+  meeting: '회의록',
+  report:  'AI 보고서',
+  news:    '뉴스',
 };
 
 export default class UIScene extends Phaser.Scene {

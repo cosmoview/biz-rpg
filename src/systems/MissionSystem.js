@@ -1,6 +1,7 @@
 // ============================================================
-// MissionSystem.js — 미션 상태 관리, 잠금 해제 트리거
-// 선택지 퀴즈(stage1/2) + 매칭 미션(stage3) + 클리어 처리
+// MissionSystem.js — 미션 상태 관리, 잠금 해제 트리거 v11
+// 다단계 미션 지원: stage{N}_missions 배열을 순차 진행
+// 미션마다 nextLines로 분기 대사 흡수, 마지막 정답 후 clear → 잠금 해제
 // 모든 대사는 scripts.js에서만 가져옴 — 하드코딩 금지
 // ============================================================
 
@@ -8,16 +9,16 @@ import { SCRIPTS, MISSION_INITIAL, SKILL_CARDS } from '../data/scripts.js';
 
 /** 스테이지 → 미션ID 매핑 */
 const STAGE_MISSION_MAP = {
-  1: 'chat_builder',
-  2: 'auto_rag',
-  3: 'mcp_connect',
+  1: 'meeting',
+  2: 'report',
+  3: 'news',
 };
 
-/** 스테이지 → 스킬카드 인덱스 매핑 */
+/** 스테이지 → 스킬카드 인덱스 매핑 (SKILL_CARDS 배열 순서와 동일) */
 const STAGE_SKILL_INDEX = {
-  1: 0,  // 바이브코딩
-  2: 1,  // 팀즈 연동
-  3: 2,  // MCP 연결
+  1: 0,  // 회의록 자동화
+  2: 1,  // AI 보고서
+  3: 2,  // 뉴스 큐레이션
 };
 
 export default class MissionSystem {
@@ -32,14 +33,14 @@ export default class MissionSystem {
     /** 대화 시스템 참조 */
     this.dialog = dialog;
 
-    /** 미션 완료 상태 (vibe_coding / teams_sync / mcp_connect) */
+    /** 미션 완료 상태 (meeting / report / news) */
     this.missionState = { ...MISSION_INITIAL };
 
     /** 현재 진행 중인 스테이지 (0=없음, 1~3) */
     this.currentStage = 0;
 
-    /** 스테이지 3 매칭 결과 임시 저장 */
-    this._matchingAnswers = {};
+    /** 현재 진행 중인 미션 인덱스 (스테이지 내 몇 번째 미션) */
+    this._currentMissionIndex = 0;
   }
 
   // ─────────────────────────────────────────────────────────
@@ -62,96 +63,128 @@ export default class MissionSystem {
   }
 
   /**
-   * 스테이지 시작 (인트로 대사 → 미션 출제)
+   * 스테이지 시작 (인트로 대사 → 첫 미션 출제)
    * @param {number} stage — 1, 2, 3
    * @param {Function} [onStageComplete] — 스테이지 클리어 후 콜백
    */
   startStage(stage, onStageComplete) {
     this.currentStage = stage;
+    this._currentMissionIndex = 0;
+
     const introKey = `stage${stage}_intro`;
     const introLines = SCRIPTS[introKey];
 
     if (!introLines) return;
 
-    // 인트로 대사 재생 → 완료 후 미션 출제
+    // 인트로 대사 재생 → 완료 후 첫 미션 출제
     this.dialog.startDialog(introLines, () => {
-      this._presentMission(stage, onStageComplete);
+      this._presentCurrentMission(stage, onStageComplete);
     });
   }
 
   // ─────────────────────────────────────────────────────────
-  // 미션 출제
+  // 미션 출제 (다단계)
   // ─────────────────────────────────────────────────────────
 
-  /** 스테이지에 맞는 미션 출제 */
-  _presentMission(stage, onStageComplete) {
-    const missionKey = `stage${stage}_mission`;
-    const mission = SCRIPTS[missionKey];
+  /**
+   * 현재 인덱스의 미션을 출제
+   * 마지막 미션을 넘어서면 stage{N}_clear 재생 → 미션 완료 처리
+   */
+  _presentCurrentMission(stage, onStageComplete) {
+    const missionsKey = `stage${stage}_missions`;
+    const missions = SCRIPTS[missionsKey];
 
-    if (!mission) return;
+    if (!missions || missions.length === 0) {
+      // 미션 데이터 없으면 즉시 클리어 처리
+      this._playClearDialog(stage, onStageComplete);
+      return;
+    }
+
+    const idx = this._currentMissionIndex;
+
+    // 모든 미션 완료 → 클리어 대사 → 완료 처리
+    if (idx >= missions.length) {
+      this._playClearDialog(stage, onStageComplete);
+      return;
+    }
+
+    const mission = missions[idx];
 
     if (mission.type === 'choice') {
       this._presentChoiceMission(stage, mission, onStageComplete);
-    } else if (mission.type === 'matching') {
-      this._presentMatchingMission(stage, mission, onStageComplete);
     }
+    // 추후 다른 미션 타입 추가 시 여기에 분기 추가
   }
 
   // ─────────────────────────────────────────────────────────
-  // 선택지 퀴즈 (stage1, stage2)
+  // 선택지 퀴즈
   // ─────────────────────────────────────────────────────────
 
-  /** 선택지 퀴즈 표시 */
+  /** 선택지 퀴즈 표시 (질문 + 선택지) */
   _presentChoiceMission(stage, mission, onStageComplete) {
-    // 인트로 마지막 대사를 질문 텍스트로 사용
-    const introKey = `stage${stage}_intro`;
-    const introLines = SCRIPTS[introKey];
-    const lastIntroLine = introLines ? introLines[introLines.length - 1] : null;
-    // showScreen이 아닌 실제 대사만 질문으로 표시
-    const questionLine = (lastIntroLine && !lastIntroLine.showScreen) ? lastIntroLine : null;
+    // 질문 텍스트 결정 우선순위:
+    // 1) mission.questionLine (각 미션이 직접 지정한 질문)
+    // 2) 첫 번째 미션이면 인트로 마지막 대사를 질문으로 재활용
+    // 3) 없으면 질문 없이 선택지만 표시
+    let questionLine = mission.questionLine || null;
 
-    // 대화창에 질문 텍스트 + 선택지 표시
+    if (!questionLine && this._currentMissionIndex === 0) {
+      const introLines = SCRIPTS[`stage${stage}_intro`];
+      const lastIntro = introLines ? introLines[introLines.length - 1] : null;
+      // showScreen 트리거가 아닌 실제 대사만 질문으로 사용
+      if (lastIntro && !lastIntro.showScreen) {
+        questionLine = lastIntro;
+      }
+    }
+
+    // 대화창에 질문 + 선택지 표시
     this.dialog.showChoices(mission.choices, (selectedLabel) => {
-      // 선택된 항목 찾기
       const selected = mission.choices.find((c) => c.label === selectedLabel);
 
       if (selected && selected.correct) {
-        // ── 정답 ──
         this._onCorrectAnswer(stage, mission, selectedLabel, onStageComplete);
       } else {
-        // ── 오답 ──
         this._onWrongAnswer(stage, mission, selectedLabel, onStageComplete);
       }
     }, questionLine);
   }
 
-  /** 정답 처리 (선택지) */
+  /** 정답 처리 — 피드백 → nextLines(있으면) → 다음 미션 */
   _onCorrectAnswer(stage, mission, label, onStageComplete) {
-    // 초록 반짝임 이펙트
+    // 정답 이펙트
     this._flashCorrect();
 
     // 정답 피드백 대사 재생
-    const feedbackLines = mission.feedback[label];
-    if (feedbackLines) {
-      this.dialog.startDialog(feedbackLines, () => {
-        // 클리어 대사 → 클리어 처리
-        this._playClearDialog(stage, onStageComplete);
-      });
+    const feedbackLines = mission.feedback ? mission.feedback[label] : null;
+
+    const afterFeedback = () => {
+      // nextLines가 있으면 분기 대사 재생 후 다음 미션으로
+      if (mission.nextLines && mission.nextLines.length > 0) {
+        this.dialog.startDialog(mission.nextLines, () => {
+          this._advanceToNextMission(stage, onStageComplete);
+        });
+      } else {
+        this._advanceToNextMission(stage, onStageComplete);
+      }
+    };
+
+    if (feedbackLines && feedbackLines.length > 0) {
+      this.dialog.startDialog(feedbackLines, afterFeedback);
     } else {
-      this._playClearDialog(stage, onStageComplete);
+      afterFeedback();
     }
   }
 
-  /** 오답 처리 (선택지) */
+  /** 오답 처리 — 피드백 → 같은 미션 재시도 */
   _onWrongAnswer(stage, mission, label, onStageComplete) {
-    // 화면 쉐이크 이펙트
+    // 오답 이펙트
     this._shakeScreen();
 
     // 오답 피드백 대사 재생 → 재시도
-    const feedbackLines = mission.feedback[label];
-    if (feedbackLines) {
+    const feedbackLines = mission.feedback ? mission.feedback[label] : null;
+    if (feedbackLines && feedbackLines.length > 0) {
       this.dialog.startDialog(feedbackLines, () => {
-        // 재시도: 다시 선택지 표시
+        // 같은 미션 다시 출제 (인덱스 변경 없음)
         this._presentChoiceMission(stage, mission, onStageComplete);
       });
     } else {
@@ -159,69 +192,10 @@ export default class MissionSystem {
     }
   }
 
-  // ─────────────────────────────────────────────────────────
-  // 매칭 미션 (stage3)
-  // ─────────────────────────────────────────────────────────
-
-  /** 매칭 미션 표시 (업무 하나씩 순서대로 출제) */
-  _presentMatchingMission(stage, mission, onStageComplete) {
-    this._matchingAnswers = {};
-    this._presentMatchingStep(stage, mission, 0, onStageComplete);
-  }
-
-  /** 매칭 미션 한 단계 출제 */
-  _presentMatchingStep(stage, mission, taskIndex, onStageComplete) {
-    if (taskIndex >= mission.tasks.length) {
-      // 모든 매칭 완료 → 전부 맞았는지 검증
-      this._checkMatchingResult(stage, mission, onStageComplete);
-      return;
-    }
-
-    const task = mission.tasks[taskIndex];
-
-    // 업무 내용을 대사로 표시
-    this.dialog.startDialog(
-      [{ speaker: 'choi_gwajang', name: '최과장', text: task.label }],
-      () => {
-        // 도구 선택지 표시
-        const toolChoices = mission.tools.map((t) => ({
-          label: t.id,
-          text: t.label,
-        }));
-
-        this.dialog.showChoices(toolChoices, (selectedToolId) => {
-          // 선택 결과 저장
-          this._matchingAnswers[task.id] = selectedToolId;
-          // 다음 업무로
-          this._presentMatchingStep(stage, mission, taskIndex + 1, onStageComplete);
-        });
-      }
-    );
-  }
-
-  /** 매칭 결과 검증 */
-  _checkMatchingResult(stage, mission, onStageComplete) {
-    // 모든 답이 맞는지 확인
-    const allCorrect = mission.tasks.every(
-      (task) => this._matchingAnswers[task.id] === task.answer
-    );
-
-    if (allCorrect) {
-      // ── 전부 정답 ──
-      this._flashCorrect();
-      const feedbackLines = mission.correctFeedback;
-      this.dialog.startDialog(feedbackLines, () => {
-        this._playClearDialog(stage, onStageComplete);
-      });
-    } else {
-      // ── 하나라도 오답 ──
-      this._shakeScreen();
-      const feedbackLines = mission.wrongFeedback;
-      this.dialog.startDialog(feedbackLines, () => {
-        // 재시도: 처음부터 다시
-        this._presentMatchingMission(stage, mission, onStageComplete);
-      });
-    }
+  /** 다음 미션으로 진행 (인덱스 증가 후 출제) */
+  _advanceToNextMission(stage, onStageComplete) {
+    this._currentMissionIndex++;
+    this._presentCurrentMission(stage, onStageComplete);
   }
 
   // ─────────────────────────────────────────────────────────
@@ -233,7 +207,7 @@ export default class MissionSystem {
     const clearKey = `stage${stage}_clear`;
     const clearLines = SCRIPTS[clearKey];
 
-    if (clearLines) {
+    if (clearLines && clearLines.length > 0) {
       this.dialog.startDialog(clearLines, () => {
         this._completeMission(stage, onStageComplete);
       });
@@ -248,6 +222,7 @@ export default class MissionSystem {
     const missionId = STAGE_MISSION_MAP[stage];
     this.missionState[missionId] = true;
     this.currentStage = 0;
+    this._currentMissionIndex = 0;
 
     // 미션 클리어 별 파티클 버스트
     if (this.scene.effects) this.scene.effects.starBurst();

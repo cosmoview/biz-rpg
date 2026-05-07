@@ -454,7 +454,7 @@ export default class GameScene extends Phaser.Scene {
     this.talkingNpc = npcKey;
 
     if (npcKey === 'jung_sunbae') {
-      if (!mission.isCompleted('chat_builder')) mission.startStage(1);
+      if (!mission.isCompleted('meeting')) mission.startStage(1);
       else if (mission.allCompleted) {
         this.dialog.startDialog(SCRIPTS.ending_intro, () => {
           this.talkingNpc = null;
@@ -468,63 +468,27 @@ export default class GameScene extends Phaser.Scene {
       return;
     }
     if (npcKey === 'park_juim') {
-      if (!mission.isCompleted('auto_rag')) mission.startStage(2);
+      if (!mission.isCompleted('report')) mission.startStage(2);
       return;
     }
     if (npcKey === 'choi_gwajang') {
-      if (!mission.isCompleted('mcp_connect')) mission.startStage(3);
+      if (!mission.isCompleted('news')) mission.startStage(3);
       return;
     }
     if (npcKey === 'kim_daeri') {
-      // FAQ 이미 완료 → 아무 반응 없음
+      // 이미 대화 완료 → 아무 반응 없음
       if (this.kimFaqDone) {
         this.talkingNpc = null;
         return;
       }
-      // FAQ 시작: 인트로 대사 → FAQ 선택지
-      this.dialog.startDialog(SCRIPTS.kimdarei_intro, () => {
-        this._showFaq();
+      // 코워크 정보통 5줄 자동 재생 → ✅ 마커
+      this.dialog.startDialog(SCRIPTS.kim_daeri_lines, () => {
+        this.kimFaqDone = true;
+        this._setNpcMarker('kim_daeri', '✅');
+        this.talkingNpc = null;
       });
       return;
     }
-  }
-
-  /** 김대리 FAQ 선택지 표시 */
-  _showFaq() {
-    // 혹시라도 이미 완료 상태면 즉시 종료
-    if (this.kimFaqDone) {
-      this.talkingNpc = null;
-      this.dialog.close();
-      return;
-    }
-
-    const faq = SCRIPTS.kimdarei_faq;
-    const choices = faq.questions.map((q, i) => ({
-      label: String(i),
-      text: q.label,
-    }));
-
-    this.dialog.showChoices(choices, (selectedLabel) => {
-      const idx = Number(selectedLabel);
-      const q = faq.questions[idx];
-
-      if (q && q.isExit) {
-        // ── FAQ 종료 ──
-        // 1. 즉시 완료 플래그 설정 (콜백 전에!)
-        this.kimFaqDone = true;
-        // 2. 종료 대사 출력
-        this.dialog.startDialog(q.answer, () => {
-          // 3. 대사 끝난 후 마커 변경 + 정리
-          this._setNpcMarker('kim_daeri', '✅');
-          this.talkingNpc = null;
-        });
-      } else if (q) {
-        // ── 일반 답변 → 다시 FAQ 선택지 ──
-        this.dialog.startDialog(q.answer, () => {
-          this._showFaq();
-        });
-      }
-    });
   }
 
   // ─────────────────────────────────────────────────────────
@@ -627,6 +591,15 @@ export default class GameScene extends Phaser.Scene {
       player.anims.stop();
       player.setFrame(IDLE_FRAME[this.facing]);
       // 대화 중이면 쿨다운 리셋 (대화 끝나는 시점에 자동 적용)
+      this._dialogCooldown = 6;
+      return;
+    }
+
+    // 스킬카드 표시 중이면 이동 + 상호작용 모두 차단 + 쿨다운 리셋
+    if (this.effects && this.effects.isCardShowing) {
+      player.setVelocity(0);
+      player.anims.stop();
+      player.setFrame(IDLE_FRAME[this.facing]);
       this._dialogCooldown = 6;
       return;
     }
