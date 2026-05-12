@@ -18,9 +18,9 @@ export const SCRIPTS = {
   ],
 
   // ────────────────────────────────────────────────────────
-  // 스테이지 1: 내 자리 — 회의 (회의록 자동화)
+  // 스테이지 1: 내 자리 — 회의 (노트 자동화)
   // 정선배가 처음부터 내 자리에 대기.
-  // 미션 2개: 어떻게 시작? → (모바일은 분기 대사로 흡수) → 회의록 정리
+  // 미션 2개: 어떻게 시작? → (모바일은 분기 대사로 흡수) → 노트 정리
   // ────────────────────────────────────────────────────────
   stage1_intro: [
     { speaker: 'jung_sunbae', name: '정선배', text: '오! 신입 도토리. 첫 출근 축하해.' },
@@ -34,7 +34,7 @@ export const SCRIPTS = {
       type: 'choice',
       choices: [
         { label: 'A', text: '회의 끝나고 기억나는 대로 메모장에 정리한다',  correct: false },
-        { label: 'B', text: '에이닷 비즈 회의록으로 회의 시작 시 녹음한다', correct: true  },
+        { label: 'B', text: '에이닷 비즈 노트로 회의 시작 시 녹음한다', correct: true  },
         { label: 'C', text: '동료한테 부탁한다',                             correct: false },
       ],
       feedback: {
@@ -284,7 +284,7 @@ export const SCRIPTS = {
   // 잠긴 구역 안내 메시지
   // ────────────────────────────────────────────────────────
   locked_messages: {
-    barrier_jaryosil: '아직 갈 수 없는 것 같다. 먼저 회의록 미션을 완료하자.',
+    barrier_jaryosil: '아직 갈 수 없는 것 같다. 먼저 노트 미션을 완료하자.',
     barrier_hoeuisil: '아직 갈 수 없는 것 같다. 먼저 AI 보고서 미션을 완료하자.',
   },
 
@@ -305,9 +305,9 @@ export const SKILL_CARDS = [
   {
     id:    'meeting',
     icon:  '📝',
-    title: '회의록 자동화',
+    title: '노트 자동화',
     desc1: '받아쓰기부터 정리까지 한 번에!',
-    desc2: '에이닷 노트 통합 + 모바일 + 회의 템플릿.',
+    desc2: '실시간 받아쓰기 + 모바일 + 회의 템플릿.',
   },
   {
     id:    'report',

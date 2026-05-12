@@ -24,7 +24,7 @@ const HUD_CONFIG = {
 
 /** 미션 ID → 한글 이름 매핑 */
 const MISSION_NAMES = {
-  meeting: '회의록',
+  meeting: '노트',
   report:  'AI 보고서',
   news:    '뉴스',
 };

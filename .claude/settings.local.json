@@ -10,7 +10,8 @@
       "Bash(node -e \"const c=require\\('fs'\\).readFileSync\\('C:/Users/SKTelecom/Desktop/biz_role_0407/src/scenes/GameScene.js','utf8'\\); try{require\\('vm'\\).compileFunction\\(c,[], {parsingContext: require\\('vm'\\).createContext\\(\\)}\\); console.log\\('Syntax OK'\\)}catch\\(e\\){console.log\\(e.message\\)}\")",
       "Bash(node --check \"C:/Users/SKTelecom/Desktop/biz_role_0407/src/data/scripts.js\")",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
