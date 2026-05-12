@@ -115,7 +115,7 @@ export const SCRIPTS = {
         ],
       },
       nextLines: [
-        { speaker: 'park_juim', name: '박주임', text: '자료는 모았고, 이제 슬라이드. 임원분들 텍스트 가득한 거 안 좋아하셔.' },
+        { speaker: 'park_juim', name: '박주임', text: '자료는 모았고, 이제 슬라이드. 임원분들이 뭘 좋아할까?' },
       ],
     },
 
@@ -197,7 +197,7 @@ export const SCRIPTS = {
       ],
       feedback: {
         A: [
-          { speaker: 'choi_gwajang', name: '최과장', text: '도토리야 솔직히 알람 끄고 잘 거잖아. 다시.' },
+          { speaker: 'choi_gwajang', name: '최과장', text: '도토리야 솔직히 알람 끄고 딴거 하잖아. 다시.' },
         ],
         B: [
           { speaker: 'choi_gwajang', name: '최과장', text: '메일함이 복잡해서 찾을수가 없어 ㅠ 다시.' },

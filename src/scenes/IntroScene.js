@@ -20,16 +20,32 @@ export default class IntroScene extends Phaser.Scene {
     super({ key: 'IntroScene' });
   }
 
+  preload() {
+    // A.Biz 로고 이미지 미리 로드 (인트로 화면에서 표시)
+    this.load.image('a_biz_logo', 'assets/images/a_biz_logo.png');
+  }
+
   create() {
     // ── 배경 ──
     this.add.rectangle(INTRO.CX, INTRO.CY, 1280, 720, INTRO.BG);
 
-    // ── 상단 타이틀 ──
-    this.add.text(INTRO.CX, 140, '에이닷 비즈 2.0', {
-      fontSize: '18px', fontFamily: 'sans-serif', color: INTRO.GOLD,
-    }).setOrigin(0.5);
+    // ── 상단 A.Biz 로고 (네거티브 버전, 흰색이라 배경에 그대로 올라감) ──
+    const logoY = 130;
+    if (this.textures.exists('a_biz_logo')) {
+      const logo = this.add.image(INTRO.CX, logoY, 'a_biz_logo');
+      // 픽셀아트 필터 끄고 부드러운 보간 적용 (로고처럼 매끈한 이미지용)
+      logo.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+      const targetW = 140;
+      const scale = targetW / logo.width;
+      logo.setScale(scale);
+    } else {
+      this.add.text(INTRO.CX, logoY, 'A.Biz', {
+        fontSize: '32px', fontFamily: 'sans-serif', color: INTRO.WHITE, fontStyle: 'bold',
+      }).setOrigin(0.5);
+    }
 
-    this.add.text(INTRO.CX, 190, '🌰 신입사원 도토리의 첫 출근', {
+    // ── 게임 타이틀 ──
+    this.add.text(INTRO.CX, 200, '🌰 신입사원 도토리의 첫 출근', {
       fontSize: '36px', fontFamily: 'sans-serif', color: INTRO.WHITE, fontStyle: 'bold',
     }).setOrigin(0.5);
 

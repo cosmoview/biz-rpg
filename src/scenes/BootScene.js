@@ -40,6 +40,9 @@ export default class BootScene extends Phaser.Scene {
     // ── 배경 맵 이미지 로드 ──
     this.load.image('office_map', 'assets/maps/office_map.png' + v);
 
+    // ── A.Biz 로고 이미지 로드 ──
+    this.load.image('a_biz_logo', 'assets/images/a_biz_logo.png' + v);
+
     // ── 충돌 마스크 이미지 로드 ──
     this.load.image('collision_mask', 'assets/maps/collision_mask.png' + v);
 
