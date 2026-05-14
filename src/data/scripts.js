@@ -1,6 +1,6 @@
 // ============================================================
-// scripts.js — 전체 대사 및 미션 데이터 v11.2
-// 컨셉: 회의 / AI 보고서 / 뉴스 큐레이션 + 6월 코워크 예고
+// scripts.js — 전체 대사 및 미션 데이터 v11.3
+// 컨셉: 회의(노트) / 보고서 / 뉴스 + 6월 코워크 예고
 // 모든 대사·선택지·이미지 슬롯 트리거를 여기서만 관리
 // 다단계 미션 지원: stage{N}_missions 배열, 미션마다 nextLines로 분기 대사 흡수
 // ============================================================
@@ -34,7 +34,7 @@ export const SCRIPTS = {
       type: 'choice',
       choices: [
         { label: 'A', text: '회의 끝나고 기억나는 대로 메모장에 정리한다',  correct: false },
-        { label: 'B', text: '에이닷 비즈 노트로 회의 시작 시 녹음한다', correct: true  },
+        { label: 'B', text: '에이닷 비즈 노트로 회의 시작 시 녹음한다',     correct: true  },
         { label: 'C', text: '동료한테 부탁한다',                             correct: false },
       ],
       feedback: {
@@ -69,6 +69,7 @@ export const SCRIPTS = {
         ],
         B: [
           { speaker: 'jung_sunbae', name: '정선배', text: '맞아. 임원회의용, 팀미팅용, 요점 정리... 템플릿이 종류별로 있어서 클릭 한 번이면 돼.' },
+          { speaker: 'jung_sunbae', name: '정선배', text: '정리한 회의록은 컨플루언스로 바로 연동도 돼. 팀 위키 따로 옮겨 적을 필요 없어.' },
         ],
         C: [
           { speaker: 'jung_sunbae', name: '정선배', text: '되긴 하는데, 템플릿 쓰면 일관성이 살아. 다른 사람이 봐도 익숙하잖아.' },
@@ -84,14 +85,14 @@ export const SCRIPTS = {
   ],
 
   // ────────────────────────────────────────────────────────
-  // 스테이지 2: 자료실 — AI 보고서
+  // 스테이지 2: 자료실 — 보고서
   // 미션 2개: 자료 수집(딥리서치) → 슬라이드 구성(비주얼)
   // SK 템플릿은 클리어 대사로 흡수
   // ────────────────────────────────────────────────────────
   stage2_intro: [
     { speaker: 'park_juim', name: '박주임', text: '어, 도토리 왔구나? 잘 왔어, 마침 시장 동향 보고서 쓰는 중이었거든.' },
     { speaker: 'park_juim', name: '박주임', text: '나 처음 입사했을 땐 이거 만드는 데 이틀 꼬박 걸렸어. 진짜로.' },
-    { speaker: 'park_juim', name: '박주임', text: '근데 지금은 에이닷 비즈 AI 보고서가 다 해줘! 자료수집부터 시작해볼까?' },
+    { speaker: 'park_juim', name: '박주임', text: '근데 지금은 에이닷 비즈 보고서가 다 해줘! 자료수집부터 시작해볼까?' },
   ],
 
   stage2_missions: [
@@ -99,7 +100,7 @@ export const SCRIPTS = {
     {
       type: 'choice',
       choices: [
-        { label: 'A', text: 'AI보고서에서 딥리서치 모드를 켜고 참고 문서를 첨부한다', correct: true  },
+        { label: 'A', text: '에이닷 비즈 보고서에서 딥리서치 모드를 켜고 참고 문서를 첨부한다', correct: true  },
         { label: 'B', text: '네이버 검색 결과 복사해서 붙여 넣는다',                  correct: false },
         { label: 'C', text: '작년 보고서 그대로 갖다 쓴다',                           correct: false },
       ],
@@ -115,7 +116,7 @@ export const SCRIPTS = {
         ],
       },
       nextLines: [
-        { speaker: 'park_juim', name: '박주임', text: '자료는 모았고, 이제 슬라이드. 임원분들이 뭘 좋아할까?' },
+        { speaker: 'park_juim', name: '박주임', text: '자료는 모았고, 이제 슬라이드. 임원분들 텍스트 가득한 거 안 좋아하셔.' },
       ],
     },
 
@@ -148,13 +149,13 @@ export const SCRIPTS = {
   ],
 
   // ────────────────────────────────────────────────────────
-  // 스테이지 3: 회의실 — 뉴스 큐레이션
+  // 스테이지 3: 회의실 — 에이닷 비즈 뉴스
   // 미션 2개: 비즈 나우(핫이슈) → 뉴스레터(정기 수신)
-  // AI 검색 / 비즈 토픽은 분기 대사로 흡수
+  // 비즈 토픽 검색창은 분기 대사로 흡수
   // ────────────────────────────────────────────────────────
   stage3_intro: [
     { speaker: 'choi_gwajang', name: '최과장', text: '오, 도토리. 내일 임원 보고에 업계 주요 이슈 정리해와.' },
-    { speaker: 'choi_gwajang', name: '최과장', text: '...라고 시키던 시절은 옛날 얘기야. 지금은 에이닷 비즈 뉴스 큐레이션이 다 해줘.' },
+    { speaker: 'choi_gwajang', name: '최과장', text: '...라고 시키던 시절은 옛날 얘기야. 지금은 에이닷 비즈 뉴스가 다 해줘.' },
     { speaker: 'choi_gwajang', name: '최과장', text: '근데 상황마다 쓰는 기능이 달라. 일단 한번 해보자.' },
   ],
 
@@ -165,7 +166,7 @@ export const SCRIPTS = {
       questionLine: { speaker: 'choi_gwajang', name: '최과장', text: '출근하자마자 오늘 시장 핫이슈를 30초 안에 파악하고 싶어. 어떻게 할래?' },
       choices: [
         { label: 'A', text: '네이버 뉴스 헤드라인을 쭉 훑는다',                              correct: false },
-        { label: 'B', text: '에이닷 비즈 뉴스 큐레이션에서 "오늘의 주요 이슈" 카드를 본다', correct: true  },
+        { label: 'B', text: "에이닷 비즈 뉴스의 '비즈 나우' 메뉴에서 오늘의 주요 뉴스를 본다", correct: true  },
         { label: 'C', text: '단톡방에서 누가 공유해주길 기다린다',                          correct: false },
       ],
       feedback: {
@@ -173,15 +174,14 @@ export const SCRIPTS = {
           { speaker: 'choi_gwajang', name: '최과장', text: '연예 뉴스까지 다 떠. 30초는 무리야. 다시.' },
         ],
         B: [
-          { speaker: 'choi_gwajang', name: '최과장', text: '정답! 비즈 나우가 실시간으로 골라서 카드로 보여줘. 출근길에 폰으로 슥 보면 끝.' },
+          { speaker: 'choi_gwajang', name: '최과장', text: '정답! 비즈 나우가 실시간으로 골라서 보여줘. 출근길에 폰으로 슥 보면 끝.' },
         ],
         C: [
           { speaker: 'choi_gwajang', name: '최과장', text: '...운에 맡기는 거잖아. 다시 해보자.' },
         ],
       },
       nextLines: [
-        { speaker: 'choi_gwajang', name: '최과장', text: '특정 이슈 깊게 보고 싶으면 AI 검색으로 의도 기반 검색하면 돼. 키워드 매칭이 아니라 진짜 연관된 기사를 찾아서 핵심만 요약해줘.' },
-        { speaker: 'choi_gwajang', name: '최과장', text: '관심 주제가 정해져 있으면 비즈 토픽으로 등록해서 자동 추적·북마크도 되고.' },
+        { speaker: 'choi_gwajang', name: '최과장', text: "특정 이슈를 깊게 보고 싶으면 '비즈 토픽'의 검색창에서 원하는 내용을 검색하면 돼. 키워드 매칭이 아니라 진짜 연관된 기사를 찾아서 핵심만 요약해줘." },
         { speaker: 'choi_gwajang', name: '최과장', text: '근데 매일 직접 들어가서 보는 거 귀찮잖아. 마지막 한 가지.' },
       ],
     },
@@ -191,13 +191,13 @@ export const SCRIPTS = {
       type: 'choice',
       questionLine: { speaker: 'choi_gwajang', name: '최과장', text: '나는 매주 월요일 오전 9시에 텔레그램으로 받고 싶어. 어떻게 설정할래?' },
       choices: [
-        { label: 'A', text: '매주 월요일 알람 맞춰놓고 직접 들어간다',                  correct: false },
-        { label: 'B', text: '매일 받아서 월요일 거만 골라 본다',                        correct: false },
-        { label: 'C', text: '에이닷 비즈 뉴스레터 — 토픽·요일·시간·채널을 설정한다',   correct: true  },
+        { label: 'A', text: '매주 월요일 알람 맞춰놓고 직접 들어간다',         correct: false },
+        { label: 'B', text: '매일 받아서 월요일 거만 골라 본다',               correct: false },
+        { label: 'C', text: '뉴스레터 — 토픽·요일·시간·채널을 설정한다',      correct: true  },
       ],
       feedback: {
         A: [
-          { speaker: 'choi_gwajang', name: '최과장', text: '도토리야 솔직히 알람 끄고 딴거 하잖아. 다시.' },
+          { speaker: 'choi_gwajang', name: '최과장', text: '도토리야 솔직히 알람 끄고 잘 거잖아. 다시.' },
         ],
         B: [
           { speaker: 'choi_gwajang', name: '최과장', text: '메일함이 복잡해서 찾을수가 없어 ㅠ 다시.' },
@@ -211,7 +211,7 @@ export const SCRIPTS = {
 
   stage3_clear: [
     { speaker: 'system',       name: '',       text: '', showScreen: 'screen_6' },
-    { speaker: 'choi_gwajang', name: '최과장', text: '비즈 나우, AI 검색, 비즈 토픽, 뉴스레터. 이 4개 같이 쓰는 게 진짜 강력해.' },
+    { speaker: 'choi_gwajang', name: '최과장', text: '비즈 나우, 비즈 토픽, 뉴스레터. 이 3개를 같이 쓰는 게 진짜 강력해.' },
     { speaker: 'choi_gwajang', name: '최과장', text: '자, 정선배한테 가서 인사하고 와.' },
   ],
 
@@ -246,11 +246,11 @@ export const SCRIPTS = {
   // 이스터에그 (✦ 오브젝트 조사 시)
   // ────────────────────────────────────────────────────────
   easter_eggs: {
-    // 자료실 박스 → AI 보고서
+    // 자료실 박스 → 보고서
     easter_box: [
       { speaker: 'system', name: '[시스템]', italic: true, text: '먼지 쌓인 종이박스에 누렇게 변한 라벨이 붙어있다.' },
       { speaker: 'system', name: '[시스템]', italic: true, text: '"2019년 1분기 보고서 (출력본 500부)"' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: 'AI 보고서가 있었으면 이거 한 시간이면 끝났을 텐데...' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '에이닷 비즈 보고서가 있었으면 이거 한 시간이면 끝났을 텐데...' },
     ],
     // 회의실 화이트보드 → 회의록
     easter_whiteboard: [
@@ -285,7 +285,7 @@ export const SCRIPTS = {
   // ────────────────────────────────────────────────────────
   locked_messages: {
     barrier_jaryosil: '아직 갈 수 없는 것 같다. 먼저 노트 미션을 완료하자.',
-    barrier_hoeuisil: '아직 갈 수 없는 것 같다. 먼저 AI 보고서 미션을 완료하자.',
+    barrier_hoeuisil: '아직 갈 수 없는 것 같다. 먼저 에이닷 비즈 보고서 미션을 완료하자.',
   },
 
   // ────────────────────────────────────────────────────────
@@ -299,7 +299,7 @@ export const SCRIPTS = {
 
 // ────────────────────────────────────────────────────────
 // 스킬카드 데이터 (엔딩에서 표시)
-// ID 변경: chat_builder/auto_rag/mcp_connect → meeting/report/news
+// ID: meeting / report / news
 // ────────────────────────────────────────────────────────
 export const SKILL_CARDS = [
   {
@@ -312,16 +312,16 @@ export const SKILL_CARDS = [
   {
     id:    'report',
     icon:  '📊',
-    title: 'AI 보고서',
+    title: '보고서',
     desc1: '딥리서치로 자료 모아 슬라이드까지!',
     desc2: '비주얼 차트·다이어그램 + SK 그룹 템플릿.',
   },
   {
     id:    'news',
     icon:  '📰',
-    title: '뉴스 큐레이션',
-    desc1: '핫이슈부터 정기 수신까지 개인화!',
-    desc2: '비즈 나우 / AI 검색 / 비즈 토픽 / 뉴스레터.',
+    title: '에이닷 비즈 뉴스',
+    desc1: '핫이슈부터 정기 뉴스레터까지 개인화!',
+    desc2: '비즈 나우 / 비즈 토픽 / 뉴스레터.',
   },
 ];
 
