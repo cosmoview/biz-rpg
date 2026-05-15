@@ -237,7 +237,7 @@ export const SCRIPTS = {
   kim_daeri_lines: [
     { speaker: 'kim_daeri', name: '김대리', text: '어, 도토리? 나 김대리. 휴게실에서 자주 보게 될 거야.' },
     { speaker: 'kim_daeri', name: '김대리', text: '한 바퀴 돌고 왔지? 근데 야, 진짜 재밌는 건 6월이라니까.' },
-    { speaker: 'kim_daeri', name: '김대리', text: 'Co-Work라고 곧 나오는데... 업무 절차와 기준을 스킬로 저장하면 에이전트가 스스로 파악해서 일을 처리해.' },
+    { speaker: 'kim_daeri', name: '김대리', text: '에이닷 비즈 코워크라고 곧 나오는데... 업무 절차와 기준을 스킬로 저장하면 에이전트가 스스로 파악해서 일을 처리해.' },
     { speaker: 'kim_daeri', name: '김대리', text: '발신 시점도 알아서 정하고, 문서·스킬 같은 영역까지 다 잡아.' },
     { speaker: 'kim_daeri', name: '김대리', text: '야 이거 진짜 게임체인저야. 나는 매일 출시 D-day 세고 있어. ...물론 커피 타기는 안 된다고 했지만...' },
   ],
@@ -274,7 +274,7 @@ export const SCRIPTS = {
     // 휴게실 탁자 → 6월 코워크 종합 안내 (B-3안)
     easter_table: [
       { speaker: 'system', name: '[시스템]', italic: true, text: '탁자 위에 사내 뉴스레터가 놓여있다.' },
-      { speaker: 'system', name: '[시스템]', italic: true, text: '「6월 출시 — Co-Work, 시키지 않아도 일하는 AI」' },
+      { speaker: 'system', name: '[시스템]', italic: true, text: '「6월 출시 — 에이닷 비즈 코워크 시키지 않아도 일하는 AI」' },
       { speaker: 'system', name: '[시스템]', italic: true, text: '업무 절차를 스스로 파악·실행. 발신 시점까지 자동 처리.' },
       { speaker: 'system', name: '[시스템]', italic: true, text: '문서, 스킬 등 다양한 업무 영역 지원. ※ 커피는 못 탑니다.' },
     ],
